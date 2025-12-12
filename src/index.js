@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { DB_NAME } from "./constants.js"
+import {app} from './app.js';
 
 import connectDB from "./db/index.js";
 // require("dotenv").config();
@@ -11,7 +12,28 @@ dotenv.config({
 })
 
 
-connectDB()
+const db=connectDB()
+.then(()=>{
+    app.listen(process.env.PORT || 8000 ,()=>{
+        console.log(`server is running at port : ${process.env.PORT}`);
+
+        mongoose.connection.on("error",(err)=>{
+    console.log("Mongodb connected error detected : ",err);
+
+    
+// Server chal raha tha, beech me MongoDB crash ho gaya	.on("error")
+            
+        })
+    })
+})
+
+.catch((err)=>{
+    console.log("MongoDB connection failed !!!",err);
+})
+
+
+// Server start ke time MongoDB down	.catch()
+ 
 
 
 
